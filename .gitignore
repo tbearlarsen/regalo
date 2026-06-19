@@ -3,6 +3,4 @@ dist/
 .venv/
 .astro/
 .DS_Store
-_project/portrait.png
-_project/qr*.png
-_project/temp.md
+_project/
