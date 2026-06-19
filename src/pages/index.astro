@@ -1,0 +1,696 @@
+---
+import Base from '../layouts/Base.astro';
+import { Image } from 'astro:assets';
+import imgForest  from '../assets/activities/Forest.png';
+import imgSwim    from '../assets/activities/swim.png';
+import imgFishing from '../assets/activities/fishing.png';
+import imgStars   from '../assets/activities/stars.png';
+import imgMuseum  from '../assets/activities/museum.png';
+
+const activities = [
+  {
+    img: imgForest,
+    alt: 'The whole crew in the enchanted beech forest',
+    text: "Take inspiration from Bilbo and go on an adventure. Emma's crawling abilities are due for a test, and there are plenty of beautiful paths to explore.",
+  },
+  {
+    img: imgSwim,
+    alt: 'Swimming at the chalk cliff beach',
+    text: 'Brave the cold Danish water in a stunning setting (and for las gallinas, tanning is also an option).',
+  },
+  {
+    img: imgFishing,
+    alt: 'Silas\'s legendary fishing setup',
+    text: 'Maybe see those legendary skills of Silas at work catching a fish. In public. With witnesses.',
+  },
+  {
+    img: imgStars,
+    alt: 'Stargazing under the Milky Way on the clifftop',
+    text: 'After a long day of fun and hygge, we can throw ourselves in the grass and enjoy some stargazing in our beautiful dark sky park.',
+  },
+  {
+    img: imgMuseum,
+    alt: 'Chaos at the geology museum',
+    text: 'Put on our learning hats, and go crazy in the one and only GeoCenter Møns Klint where they have the lime equivalent of the Mona Lisa.',
+  },
+];
+
+// ── Placeholders — fill in once answered ──
+const givers    = { from: 'Thorbjørn', and: 'Lori' };
+const tripDate  = null as Date | null;                                             // Q2
+---
+
+<Base title="Møns Klint — A Gift">
+
+  <!-- ═══════════════════════════════════════════════════ HERO -->
+  <section class="hero">
+    <canvas id="stars" aria-hidden="true"></canvas>
+    <div class="glow" id="glow" aria-hidden="true"></div>
+
+    <div class="cliff-silhouette" id="cliff-silhouette" aria-hidden="true">
+      <svg viewBox="0 0 1440 260" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M0,260 L0,200 C60,200 80,170 120,155 C160,140 180,160 220,150 C280,135 290,100 340,90
+                 C380,82 400,110 450,105 C510,98 530,60 590,45 C630,35 650,70 700,75
+                 C750,80 760,50 820,40 C870,32 890,65 940,70 C990,75 1000,45 1060,38
+                 C1110,32 1130,60 1180,65 C1230,70 1250,45 1300,50
+                 C1350,55 1380,80 1440,85 L1440,260 Z"
+              fill="#0f0f1a" />
+      </svg>
+    </div>
+
+    <div class="hero-content">
+      <p class="hero-dedication" id="hero-dedication">For Alba &amp; Silas</p>
+      <h1 class="hero-title display" id="hero-title">Møns Klint</h1>
+      <p class="hero-sub" id="hero-sub">A gift from {givers.from} &amp; {givers.and}</p>
+      <div class="scroll-hint" id="hero-hint" aria-hidden="true"><span>↓</span></div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════ REVEAL -->
+  <section class="reveal">
+    <div class="reveal-inner">
+      <h2 class="reveal-title display">We're taking you on a trip.</h2>
+      <p class="reveal-body">
+        Los cinco juntos, al blanco Møns Klint, para un fin de semana extendido.
+        Todo incluido. Alojamiento, comida, besitos para Emma.
+        Creemos que el mejor regalo que podemos daros es pasar tiempo juntos.
+        Cuando fuimos a Møns Klint, nos encantó y solo podíamos pensar en volver.
+        Y no podemos pensar en mejor compañía que no sea con vosotros.
+        Por supuesto, si preferís otro destino, lo podemos cambiar.
+        Solo queremos una excusa para irnos de viaje los 5 juntos
+        y mimaros tanto como os merecéis.
+      </p>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════ ACTIVITIES -->
+  <section class="activities">
+    <div class="activities-inner">
+      <h2 class="activities-title display">On Møn, we could…</h2>
+
+      {activities.map((a, i) => (
+        <div class={`activity${i % 2 === 1 ? ' activity--flip' : ''}`}>
+          <div class="activity-img">
+            <button class="img-btn" data-src={a.img.src} data-alt={a.alt} aria-label={`View: ${a.alt}`}>
+              <Image src={a.img} alt={a.alt} />
+            </button>
+          </div>
+          <div class="activity-text">
+            <p>{a.text}</p>
+          </div>
+        </div>
+      ))}
+
+      <!-- Lightbox -->
+      <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Image viewer">
+        <button class="lightbox-close" id="lightbox-close" aria-label="Close">✕</button>
+        <img class="lightbox-img" id="lightbox-img" src="" alt="" />
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════ DETAILS -->
+  <section class="details">
+    <div class="details-inner">
+
+      {tripDate ? (
+        <>
+          <div class="countdown-wrap" id="countdown-wrap">
+            <p class="countdown-label">Dage til turen</p>
+            <div class="countdown" id="countdown">
+              <div class="unit"><span class="num" id="cd-days">--</span><span class="lbl">dage</span></div>
+              <div class="sep">:</div>
+              <div class="unit"><span class="num" id="cd-hours">--</span><span class="lbl">timer</span></div>
+              <div class="sep">:</div>
+              <div class="unit"><span class="num" id="cd-mins">--</span><span class="lbl">min</span></div>
+            </div>
+          </div>
+        </>
+      ) : (
+        <div class="dates-tbd">
+          <p class="display dates-tbd-text">Dato følger</p>
+          <p class="dates-tbd-sub">Vi håber i glæder jer lige så meget som os til en weekend sammen. Vi finder bare ud af det praktiske når vi har tid til at slå hovederne sammen! Som sagt er dette bare et forslag. Hvis i har en anden destination i hellere vil til, er vi åbne. Vi vil bare gerne være sammen med jer!</p>
+        </div>
+      )}
+
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════ FOOTER -->
+  <footer class="site-footer">
+    <p>With love, {givers.from} &amp; {givers.and}</p>
+  </footer>
+
+</Base>
+
+<!-- ── Star field + arrival sequence ────────────────────────── -->
+<script>
+  // Canvas setup
+  const canvas = document.getElementById('stars') as HTMLCanvasElement;
+  const ctx    = canvas.getContext('2d')!;
+
+  function resize() {
+    canvas.width  = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  // Each star knows how far from center it is, which controls when it appears.
+  // Stars near the center reveal first (the glow "uncovers" them outward).
+  const CX = 0.5, CY = 0.40;
+  const MAX_DIST = Math.sqrt(CX * CX + CY * CY); // normalised max distance ≈ 0.64
+
+  interface Star {
+    x: number; y: number; r: number;
+    targetAlpha: number;
+    phase: number;   // sine-wave twinkle offset
+    speed: number;   // twinkle speed
+    revealDelay: number; // ms after sequenceStart before this star begins fading in
+  }
+
+  const stars: Star[] = [];
+  for (let i = 0; i < 220; i++) {
+    const x = Math.random();
+    const y = Math.random() * 0.82;
+    const dist = Math.sqrt((x - CX) ** 2 + (y - CY) ** 2);
+    stars.push({
+      x, y,
+      r: Math.random() * 1.1 + 0.3,
+      targetAlpha: Math.random() * 0.55 + 0.25,
+      phase: Math.random() * Math.PI * 2,
+      speed: Math.random() * 0.0007 + 0.0003,
+      revealDelay: 400 + (dist / MAX_DIST) * 2000, // 400 ms → 2400 ms
+    });
+  }
+
+  // Set by the arrival sequence once the page is fully loaded.
+  // While null, the canvas draws nothing (page is black).
+  let sequenceStart: number | null = null;
+
+  function draw(now: number) {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    if (sequenceStart !== null) {
+      for (const s of stars) {
+        const elapsed = now - sequenceStart - s.revealDelay;
+        if (elapsed <= 0) continue;
+
+        const fadeIn  = Math.min(1, elapsed / 500);                         // 500 ms fade-in
+        const twinkle = 0.65 + 0.35 * Math.sin(now * s.speed + s.phase);   // gentle sine pulse
+        const alpha   = s.targetAlpha * fadeIn * twinkle;
+
+        ctx.beginPath();
+        ctx.arc(s.x * canvas.width, s.y * canvas.height, s.r, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(255,255,255,${alpha.toFixed(3)})`;
+        ctx.fill();
+      }
+    }
+
+    requestAnimationFrame(draw);
+  }
+  requestAnimationFrame(draw);
+
+  // Arrival sequence — starts only after fonts and assets are ready
+  function show(id: string) {
+    document.getElementById(id)?.classList.add('visible');
+  }
+
+  window.addEventListener('load', () => {
+    sequenceStart = performance.now();
+
+    const glow = document.getElementById('glow')!;
+
+    setTimeout(() => glow.classList.add('active'),  400);   // glow expands
+    setTimeout(() => glow.classList.add('fading'), 2100);   // glow fades out
+
+    setTimeout(() => show('hero-dedication'),        3200); // "For [Sister] & [Partner]"
+    setTimeout(() => show('cliff-silhouette'),       4400); // cliff rises
+    setTimeout(() => show('hero-title'),             5200); // "Møns Klint"
+    setTimeout(() => show('hero-sub'),               6000); // "A gift from…"
+    setTimeout(() => show('hero-hint'),              6700); // ↓
+  });
+</script>
+
+<!-- ── Lightbox ──────────────────────────────────────────────── -->
+<script>
+  const lightbox  = document.getElementById('lightbox')!;
+  const lbImg     = document.getElementById('lightbox-img') as HTMLImageElement;
+  const lbClose   = document.getElementById('lightbox-close')!;
+
+  function open(src: string, alt: string) {
+    lbImg.src = src;
+    lbImg.alt = alt;
+    lightbox.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function close() {
+    lightbox.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  document.querySelectorAll<HTMLButtonElement>('.img-btn').forEach(btn => {
+    btn.addEventListener('click', () => open(btn.dataset.src!, btn.dataset.alt!));
+  });
+
+  lbClose.addEventListener('click', close);
+  lightbox.addEventListener('click', e => { if (e.target === lightbox) close(); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') close(); });
+</script>
+
+<!-- ── Scroll reveal (below-the-fold sections) ─────────────── -->
+<script>
+  const observer = new IntersectionObserver(
+    (entries) => entries.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); }
+    }),
+    { threshold: 0.12 }
+  );
+  document.querySelectorAll('.reveal, .activities, .activity, .details')
+    .forEach(el => observer.observe(el));
+</script>
+
+<!-- ── Countdown (only when tripDate is set) ────────────────── -->
+{tripDate && (
+  <script define:vars={{ tripDate }} is:inline>
+    function tick() {
+      const diff = new Date(tripDate).getTime() - Date.now();
+      if (diff <= 0) { document.getElementById('countdown').textContent = "It's time!"; return; }
+      const days  = Math.floor(diff / 86400000);
+      const hours = Math.floor((diff % 86400000) / 3600000);
+      const mins  = Math.floor((diff % 3600000) / 60000);
+      document.getElementById('cd-days').textContent  = String(days);
+      document.getElementById('cd-hours').textContent = String(hours).padStart(2, '0');
+      document.getElementById('cd-mins').textContent  = String(mins).padStart(2, '0');
+    }
+    tick();
+    setInterval(tick, 30000);
+  </script>
+)}
+
+<style>
+  /* ── HERO ─────────────────────────────────────────────────── */
+  .hero {
+    position: relative;
+    min-height: 100svh;
+    background: var(--dark);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  #stars {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+  }
+
+  /* Glow — a radial bloom that expands from centre, then fades */
+  .glow {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    background: radial-gradient(circle, rgba(255,255,255,0.11) 0%, rgba(255,255,255,0.04) 45%, transparent 70%);
+    transition:
+      width  1600ms cubic-bezier(0.25, 0.46, 0.45, 0.94),
+      height 1600ms cubic-bezier(0.25, 0.46, 0.45, 0.94),
+      opacity 1200ms ease;
+    opacity: 0;
+    pointer-events: none;
+    z-index: 1;
+  }
+  .glow.active {
+    width: 720px;
+    height: 720px;
+    opacity: 1;
+  }
+  .glow.fading {
+    opacity: 0;
+  }
+
+  /* Cliff silhouette — starts hidden, rises into place */
+  .cliff-silhouette {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 260px;
+    pointer-events: none;
+    z-index: 2;
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 1000ms ease, transform 1000ms ease;
+  }
+  .cliff-silhouette.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .cliff-silhouette svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+
+  /* Hero content — each child reveals independently */
+  .hero-content {
+    position: relative;
+    z-index: 3;
+    text-align: center;
+    color: var(--cream);
+    padding: 2rem;
+  }
+
+  .hero-dedication {
+    font-size: 0.7rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.5);
+    margin-bottom: 1.5rem;
+    opacity: 0;
+    transition: opacity 1000ms ease;
+  }
+  .hero-dedication.visible { opacity: 1; }
+
+  .hero-title {
+    font-size: clamp(4rem, 12vw, 9rem);
+    line-height: 0.95;
+    color: var(--cream);
+    margin-bottom: 1.25rem;
+    opacity: 0;
+    transition: opacity 1100ms ease;
+  }
+  .hero-title.visible { opacity: 1; }
+
+  .hero-sub {
+    font-size: 0.75rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.3);
+    opacity: 0;
+    transition: opacity 900ms ease;
+  }
+  .hero-sub.visible { opacity: 1; }
+
+  .scroll-hint {
+    margin-top: 3rem;
+    color: rgba(255,255,255,0.18);
+    font-size: 1.25rem;
+    opacity: 0;
+    transition: opacity 800ms ease;
+  }
+  .scroll-hint.visible {
+    opacity: 1;
+    animation: bob 2.2s ease-in-out infinite;
+  }
+
+  @keyframes bob {
+    0%, 100% { transform: translateY(0); }
+    50%       { transform: translateY(7px); }
+  }
+
+  /* ── SHARED SECTION BASE ────────────────────────────────── */
+  .reveal, .place, .details, .photos {
+    opacity: 0;
+    transition: opacity 900ms ease;
+  }
+  .reveal.visible, .place.visible, .details.visible, .photos.visible {
+    opacity: 1;
+  }
+
+  /* ── REVEAL ─────────────────────────────────────────────── */
+  .reveal {
+    background: var(--cream);
+    padding: 7rem 2rem 6rem;
+  }
+
+  .reveal-inner {
+    max-width: 640px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .reveal-label {
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 1.5rem;
+  }
+
+  .reveal-title {
+    font-size: clamp(2.5rem, 6vw, 4.5rem);
+    line-height: 1.05;
+    color: var(--text);
+    margin-bottom: 2rem;
+  }
+
+  .reveal-body {
+    font-size: 1.05rem;
+    color: #555;
+    max-width: 520px;
+    margin: 0 auto 3rem;
+    line-height: 1.85;
+  }
+
+  .travelers {
+    border-top: 1px solid var(--border);
+    padding-top: 2rem;
+  }
+
+  .travelers-label {
+    font-size: 0.65rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 1rem;
+  }
+
+  .travelers-list {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.5rem 2rem;
+    font-size: 1rem;
+    color: var(--text);
+  }
+
+  /* ── ACTIVITIES ─────────────────────────────────────────── */
+  .activities {
+    background: #f5f3ef;
+    padding: 6rem 2rem;
+  }
+
+  .activities-inner {
+    max-width: 860px;
+    margin: 0 auto;
+  }
+
+  .activities-title {
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    color: var(--text);
+    text-align: center;
+    margin-bottom: 4rem;
+  }
+
+  .activity {
+    display: flex;
+    align-items: center;
+    gap: 3.5rem;
+    margin-bottom: 5rem;
+    opacity: 0;
+    transition: opacity 800ms ease;
+  }
+  .activity.visible { opacity: 1; }
+  .activity:last-child { margin-bottom: 0; }
+
+  .activity--flip { flex-direction: row-reverse; }
+
+  .activity-img {
+    flex: 1 1 45%;
+  }
+
+  .activity-img img {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 10px;
+    transition: transform 300ms ease, box-shadow 300ms ease;
+  }
+
+  .img-btn {
+    display: block;
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: zoom-in;
+    width: 100%;
+  }
+
+  .img-btn:hover img {
+    transform: scale(1.02);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+  }
+
+  /* ── LIGHTBOX ────────────────────────────────────────────── */
+  .lightbox {
+    position: fixed;
+    inset: 0;
+    background: rgba(10, 10, 18, 0.92);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 300ms ease;
+    padding: 2rem;
+  }
+
+  .lightbox.open {
+    opacity: 1;
+    pointer-events: all;
+  }
+
+  .lightbox-img {
+    max-width: 90vw;
+    max-height: 88vh;
+    width: auto;
+    height: auto;
+    border-radius: 10px;
+    transform: scale(0.94);
+    transition: transform 300ms ease;
+    display: block;
+  }
+
+  .lightbox.open .lightbox-img {
+    transform: scale(1);
+  }
+
+  .lightbox-close {
+    position: absolute;
+    top: 1.25rem;
+    right: 1.5rem;
+    background: none;
+    border: none;
+    color: rgba(255,255,255,0.6);
+    font-size: 1.4rem;
+    cursor: pointer;
+    line-height: 1;
+    padding: 0.5rem;
+    transition: color 200ms ease;
+  }
+
+  .lightbox-close:hover {
+    color: #fff;
+  }
+
+  .activity-text {
+    flex: 1 1 45%;
+  }
+
+  .activity-text p {
+    font-size: clamp(1.05rem, 2.2vw, 1.3rem);
+    line-height: 1.65;
+    color: var(--text);
+  }
+
+  @media (max-width: 640px) {
+    .activity,
+    .activity--flip {
+      flex-direction: column;
+      gap: 1.5rem;
+      margin-bottom: 3.5rem;
+    }
+  }
+
+  /* ── DETAILS ────────────────────────────────────────────── */
+  .details {
+    background: var(--cream);
+    padding: 6rem 2rem;
+    text-align: center;
+  }
+
+  .details-inner {
+    max-width: 540px;
+    margin: 0 auto;
+  }
+
+  .dates-tbd {
+    margin: 2rem 0 3.5rem;
+  }
+
+  .dates-tbd-text {
+    font-size: clamp(2rem, 5vw, 3rem);
+    color: var(--text);
+    margin-bottom: 0.75rem;
+  }
+
+  .dates-tbd-sub {
+    font-size: 0.9rem;
+    color: var(--muted);
+  }
+
+  .countdown-wrap { margin: 2rem 0 3.5rem; }
+
+  .countdown-label {
+    font-size: 0.7rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 1rem;
+  }
+
+  .countdown {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 0.5rem;
+  }
+
+  .unit {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 3.5rem;
+  }
+
+  .num {
+    font-size: clamp(2rem, 5vw, 3rem);
+    line-height: 1;
+  }
+
+  .lbl {
+    font-size: 0.6rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-top: 0.3rem;
+  }
+
+  .sep {
+    font-size: clamp(2rem, 5vw, 3rem);
+    line-height: 1;
+    color: var(--border);
+  }
+
+
+
+  /* ── FOOTER ─────────────────────────────────────────────── */
+  .site-footer {
+    background: var(--dark);
+    color: rgba(255,255,255,0.3);
+    text-align: center;
+    padding: 3rem 2rem;
+    font-size: 0.8rem;
+    letter-spacing: 0.12em;
+  }
+</style>
