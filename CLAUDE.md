@@ -153,6 +153,18 @@ for it to actually land. Correct course the moment new information contradicts a
 — including this agent's own — rather than defending a position for its own sake. Report what was
 actually found or done, not a summary shaped to sound complete.
 
+**When to stop and when to keep going.** On a multi-part task, keep working through every part
+that doesn't need the user, and put status notes in the same message as the next action. Unwanted
+stops: a summary that announces the next step instead of taking it; an offer to continue when
+nothing waits on the user; a list of non-blocking decisions; stopping because the turn feels long.
+Wanted stops: nothing can move without the user, anything destructive or hard to reverse, writing
+outside this repo, or a genuine design choice the user should weigh in on. Source: Anthropic's
+*Prompting Claude Opus 5.5* guide.
+
+**End a substantial run with what the user needs first:** **Blocked on me**, then **Changed**, then
+**Found**. Mark anything that couldn't be confirmed, and say where you looked. Short answers don't
+need the headings.
+
 **What this deliberately doesn't cover.** Disposition, not procedure — doesn't replace this
 project's own directives/evidence-tagging/session rules, all of which still apply on top of this.
 Not self-enforcing on its own. Doesn't restate Anthropic's own safety/priority hierarchy for Claude
